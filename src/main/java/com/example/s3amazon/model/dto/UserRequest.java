@@ -2,6 +2,6 @@ package com.example.s3amazon.model.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public record UserRequest(String name, MultipartFile profileImageFile) {
+public record UserRequest(String name, String email, MultipartFile profileImageFile) {
 
 }

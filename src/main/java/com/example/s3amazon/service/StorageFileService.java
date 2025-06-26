@@ -14,32 +14,32 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 public class StorageFileService {
-	
+
 	@Autowired
 	private S3Client s3Client;
-	
+
 	@Value("${aws.bucket-name}")
 	private String bucketName;
-	
+
 	@Value("${aws.endpoint}")
 	private String endpoint;
-	
+
 	public String uploadFile(MultipartFile file, String entityFile, String fileUri) {
-		
-		String fileName = entityFile + fileUri;
-		
+
+		String safeName = entityFile.trim().toLowerCase().replaceAll("\\s+", "_") // troca espaços por underscore
+				.replaceAll("[^a-z0-9_]", ""); // remove acentos, pontuação, etc.
+
+		String fileName = safeName + "_" + fileUri;
+
 		File fileObj = convertMultiPartFileToFile(file);
-		
-		PutObjectRequest objectRequest = PutObjectRequest.builder()
-				.bucket(bucketName)
-				.key(fileName)
-				.build();
-		
+
+		PutObjectRequest objectRequest = PutObjectRequest.builder().bucket(bucketName).key(fileName).build();
+
 		s3Client.putObject(objectRequest, fileObj.toPath());
-		
+
 		return endpoint + "/" + bucketName + "/" + fileName;
 	}
-	
+
 	private File convertMultiPartFileToFile(MultipartFile file) {
 		File convertedFile = new File(file.getOriginalFilename());
 		try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
@@ -47,7 +47,7 @@ public class StorageFileService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return convertedFile;
 	}
 }

@@ -24,41 +24,41 @@ import com.example.s3amazon.service.UserService;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<UserResponse> saveUser(@ModelAttribute UserRequest userRequest) {
-        UserResponse profileImageUrl = userService.saveUser(userRequest);
-        return ResponseEntity.ok(profileImageUrl);
-    }
+	@PostMapping(consumes = "multipart/form-data")
+	public ResponseEntity<UserResponse> saveUser(@ModelAttribute UserRequest userRequest) {
+		UserResponse profileImageUrl = userService.saveUser(userRequest);
+		return ResponseEntity.ok(profileImageUrl);
+	}
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> user0 = userService.findAll();
-        return ResponseEntity.ok(user0);
-    }
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> getAllUsers() {
+		List<User> user0 = userService.findAll();
+		return ResponseEntity.ok(user0);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneUser(@PathVariable(value = "id") UUID id) {
-        Optional<User> user0 = userService.findById(id);
+	@GetMapping("/{id}")
+	public ResponseEntity<Object> getOneUser(@PathVariable(value = "id") UUID id) {
+		Optional<User> user0 = userService.findById(id);
 
-        if (user0.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+		if (user0.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		}
 
-        return ResponseEntity.ok(user0.get());
-    }
+		return ResponseEntity.ok(user0.get());
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") UUID id) {
-        Optional<User> user0 = userService.findById(id);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") UUID id) {
+		Optional<User> user0 = userService.findById(id);
 
-        if (user0.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+		if (user0.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		}
 
-        userService.delete(id);
-        return ResponseEntity.ok(user0);
-    }
+		userService.delete(id);
+		return ResponseEntity.ok(user0);
+	}
 }

@@ -15,22 +15,25 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
-	
+
 	private String name;
-	
+
+	private String email;
+
 	private String profileImageUrl;
 
-	public User(String name, String profileImageUrl) {
+	public User(String name, String email, String profileImageUrl) {
 		super();
 		this.name = name;
+		this.email = email;
 		this.profileImageUrl = profileImageUrl;
 	}
-	
+
 	public User() {
-		
+
 	}
 }

@@ -17,28 +17,44 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	@Autowired
+	private EmailService emailService;
+
 	@Autowired
 	private StorageFileService storageFileService;
-	
+
 	public UserResponse saveUser(UserRequest userRequest) {
-		
-		String profileImageUrl = storageFileService.uploadFile(userRequest.profileImageFile(), userRequest.name().trim().replaceAll("\\s+", " "), "profileImage");
-		User user = new User(userRequest.name(), profileImageUrl);
-		
+
+		String profileImageUrl = storageFileService.uploadFile(userRequest.profileImageFile(), userRequest.name(),
+				"profileImage");
+		User user = new User(userRequest.name(), userRequest.email(), profileImageUrl);
+
 		userRepository.save(user);
-		
-		return new UserResponse(user.getName(), profileImageUrl);
+
+		String message = """
+				Olá, %s!
+
+				Você foi cadastrado com sucesso no sistema.
+				Seja bem-vindo!
+
+				Att,
+				Equipe da Empresa.
+				""".formatted(user.getName());
+
+		emailService.sendEmailText(user.getEmail(), "Novo usuário cadastrado", message);
+
+		return new UserResponse(user.getName(), user.getEmail(), profileImageUrl);
 	}
-	
+
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
-	
+
 	public Optional<User> findById(UUID id) {
 		return userRepository.findById(id);
 	}
-	
+
 	public void delete(UUID id) {
 		userRepository.deleteById(id);
 	}

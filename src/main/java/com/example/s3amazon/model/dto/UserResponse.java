@@ -1,5 +1,5 @@
 package com.example.s3amazon.model.dto;
 
-public record UserResponse(String name, String profileImageUrl) {
+public record UserResponse(String name, String email, String profileImageUrl) {
 
 }
